@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
   before_action :require_current_user
   #call set_posts which will find the post for the current post/:id
-  before_action :set_post, only: %i[ show edit update destroy ]
+  #allow user to show other posts
+  before_action :set_post, only: %i[ edit update destroy ]
 
   # GET /posts or /posts.json
   def index
@@ -12,6 +13,7 @@ class PostsController < ApplicationController
 
   # GET /posts/1 or /posts/1.json
   def show
+    @post = Post.find(params[:id])
   end
 
   # GET /posts/new
@@ -69,6 +71,9 @@ class PostsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    # Using this, a user cannot access or edit another user's posts, since it the controller cannot even fire off the action that will show/update/destory another user's posts. 
+    # This is because before any of those actions even fire off, we need to look for the post that belongs to the other user, and not the current_user. 
+    # When we run the current_user.posts.find query, it will not be successful because another users posts ID cannot possibly belong here. 
     def set_post
       # @post = Post.find(params[:id])
       # want to scope posts to user. 

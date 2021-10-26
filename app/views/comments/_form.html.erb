@@ -1,0 +1,13 @@
+<%# 
+    -render this form in post#show
+    -thus has access to the current post we're showing
+    -remember, for anything that involves the path, if you pass in the instance, rails is smart enough to complete the path. 
+    -if you just pass in the current post, it knows to route to post_comments_path with the post_ID as :id
+%>
+<form action="<%= post_comments_path(post) %>" method="post">
+    <input type="hidden" name="authenticity_token">
+
+    <textarea name="comment[content]" rows="6" cols="20"></textarea>
+    
+    <input type="submit" value="Submit">
+</form>

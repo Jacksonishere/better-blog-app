@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<p> <%= flash.now[:notice] %> </p>
 
 <p>
   <strong>Title:</strong>
@@ -8,6 +8,17 @@
 <p>
   <strong>Description:</strong>
   <%= @post.description %>
+</p>
+
+<p>
+  <strong>Comments</strong>
+
+  <%# can pass in an object or list and rails knows where to find the view that corresponds to what was passed in and also passes in the object/s %>
+  <%= render @post.comments %>
+
+  <%# need to explicitely say where the partial is because we're not passing in an object AND the form isn't inside the posts view. it's inside the comments view. %>
+  <%# this means we also need to pass in a local variable %>
+  <%= render partial: 'comments/form' , locals: { post: @post } %>
 </p>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |

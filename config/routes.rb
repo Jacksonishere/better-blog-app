@@ -1,5 +1,16 @@
 Rails.application.routes.draw do
-  resources :posts
+  #resources is DSL, the routing system in rails. 
+  #by passing in a block, we can recursively continue using DSL to define the routes.
+
+  #for posts
+  #nest comment routes into posts routes which uses the show_post route as the top level. This way, we dont need to have comments as a top level route cause that wouldn't make sense anyways, or write a bunch of, posts/:id/comment , ... etc.
+  #pass in a block to resources method, 
+  resources :posts do
+    #by convention when we use nested routes, we're saying we want to do something related to the thing we're nesting inside of.
+    #for example, when we nest this route, we're expecting to create a comment for a particular post
+    resources :comments, only: [:create]
+  end
+   
 
   #users
   get '/register', to: 'users#new'
