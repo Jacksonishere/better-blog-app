@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
         @user = User.find_by(email: user_params[:email])
         
         #if user exists and password matches
-        if @user && @user.password == user_params[:password]
+        if @user && is_password?(user_params[:password])
             #store the user_id in the session
             session[:user_id] = @user.id
             redirect_to posts_path

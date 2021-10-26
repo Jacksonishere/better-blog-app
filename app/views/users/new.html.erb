@@ -7,7 +7,7 @@
     <input type="email" id="email" name="user[email]" value="<%= @user.email %>">
 
     <label for="password">Password</label>
-    <input type="password" id="password" name="user[password]" value="<%= @user.password %>">
+    <input type="password" id="password" name="user[password]" value="<%= @user.password_digest %>">
 
     <input type="submit" value="Submit">
 </form>
