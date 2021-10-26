@@ -7,12 +7,13 @@ class SessionsController < ApplicationController
         #lookup the user in db by email 
         @user = User.find_by(email: user_params[:email])
         
-        #if user exists and password matches
-        if @user && is_password?(user_params[:password])
+        #if user exists and the raw password is equal to the users password, password_digest
+        if @user&.is_password?(user_params[:password])
             #store the user_id in the session
             session[:user_id] = @user.id
             redirect_to posts_path
         else
+            #invalid credentials. render new again
             flash.now[:notice] = "Invalid email or password"
             render :new
         end
