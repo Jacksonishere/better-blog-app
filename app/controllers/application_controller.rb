@@ -1,3 +1,4 @@
+#before any of the routes get mapped to a controller, it goes to the applicationcontroller first
 class ApplicationController < ActionController::Base
     #makes this method usable in views
     helper_method :current_user
@@ -12,6 +13,14 @@ class ApplicationController < ActionController::Base
         #if there is a user_id, aka user, in the session, go find that user
         if session[:user_id]
             User.find(session[:user_id])
+        end
+    end
+    
+    #if there isnt a current user, redirect to root path.
+    #remember, routes -> controller -> model, so we're able to use the path helpers but also can use the models here as well.
+    def require_current_user
+        if current_user.nil?
+            redirect_to "/"
         end
     end
 end

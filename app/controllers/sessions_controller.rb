@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
         @user = User.new
     end
 
+    #attempt login and create session.
     def create
         #lookup the user in db by email 
         @user = User.find_by(email: user_params[:email])
@@ -17,7 +18,13 @@ class SessionsController < ApplicationController
             flash.now[:notice] = "Invalid email or password"
             render :new
         end
+    end
 
+    #destroy session, 
+    def destroy
+        session[:user_id] = nil
+        #if you dont redirect, its going to appear as if you're still signed in, until you make another request. you dont just want to render :new
+        redirect_to sign_in_path
     end
 
     private

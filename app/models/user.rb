@@ -6,6 +6,10 @@ class User < ApplicationRecord
     #if no method, uses self.email
     validates :email, uniqueness: true, presence: true
 
+    #set up relationship. rails has methods under the hood that knows how to associate user with posts now and you can do things like User.posts to get all the users posts. It knows the query to run.
+    #For example, it knows to go to the Posts table and get the posts whose FK matches the declaring Users PK.
+    has_many :posts
+
     #simply return the raw password instance, which you set when initially creating the User that used it @password to create the hashed password. 
     def password
         @password 
