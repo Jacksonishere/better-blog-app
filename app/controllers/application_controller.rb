@@ -11,8 +11,16 @@ class ApplicationController < ActionController::Base
     #use session which is another tool thats available inside controller which works with encrypted cookies by default.
     def current_user
         #if there is a user_id, aka user, in the session, go find that user
+        # puts "#{@current_user.email} current user"
+        if @current_user
+            return @current_user
+        else
+            puts "never a current user"
+        end
         if session[:user_id]
-            User.find(session[:user_id])
+            #memoize the current user so we dont need to run a db query every we use current_user which we do frequently
+            #this says if @current_user is nil, find the user in the session
+            @current_user = User.find(session[:user_id])
         end
     end
     
