@@ -29,12 +29,14 @@
 
     What it does under the hood is when you're getting all the comments for the post, as its doing that, its going to save a list of the user_id(PK) for each comment. Then after thats done, its going to run a where IN statement using that list and save all the users in memory.
   %>
-  <%= render @post.comments.includes(:user) %>
+
+  <%# render top level comments %>
+  <%= render @post.comments.where(parent_id: nil).order(id: :desc).includes(:user) %>
 
 
   <%# need to explicitely say where the partial is because we're not passing in an object AND the form isn't inside the posts view. it's inside the comments view. %>
   <%# this means we also need to pass in a local variable %>
-  <%= render partial: 'comments/form' , locals: { post: @post } %>
+  <%= render partial: 'comments/form' , locals: { post: @post, parent: nil } %>
 </p>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |

@@ -6,6 +6,12 @@
 %>
 <form action="<%= post_comments_path(post) %>" method="post">
     <input type="hidden" name="authenticity_token">
+    
+    <%# Because we're only going to create a comment, not nest, in the show page, we need to check if the incoming parent is nil before we create this hidden input. And also in the show page when we render out this form, we're going to pass in nil as the parent  %>
+    <% if !parent.nil? %>
+        <input type="hidden" name="comment[parent_id]" value="<%= parent.id %>">
+    <% end %>
+
 
     <textarea name="comment[content]" rows="6" cols="20"></textarea>
     

@@ -18,7 +18,7 @@ class CommentsController < ApplicationController
 
     def comments_params
         #remember, the id of the post is included in the params beucase we nested the comments route with the post we're currently showing which contains the id of post.
-        params.require(:comment).permit(:content).merge(post_id: params[:post_id])
+        params.require(:comment).permit(:content, :parent_id).merge(post_id: params[:post_id])
     end
 
 end
