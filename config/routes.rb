@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     #for example, when we nest this route, we're expecting to create a comment for a particular post
     resources :comments, only: [:create]
   end
+  
+  resources :likes, only: [:create, :destroy]
    
 
   #users

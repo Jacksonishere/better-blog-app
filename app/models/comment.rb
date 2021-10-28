@@ -4,11 +4,9 @@ class Comment < ApplicationRecord
   belongs_to :user
   #nesting comments relationship 
 
-  #convention
-  #knows to go to the comments table and look for a FK called comment_id.
+  #break convention
+  #this comment has many comments in the Comment table that i can retreiving using the FK called parent_id. 
   has_many :comments, foreign_key: :parent_id
-
-  #knows to go to the class/model called parent but since there is none, we need to specify we're going back to comment. 
-  #default config for belongs_to requires you to have the association, aka parent_id not null to save in database unless you put optional: true
+  #this comment's owner is in Comment class/model which you can find using the PK named parent_id
   belongs_to :parent, class_name: 'Comment', optional: true
 end

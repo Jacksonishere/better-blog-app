@@ -10,34 +10,52 @@
   <%= @post.description %>
 </p>
 
+<%= @post.likes.count %> Likes
+<%# look for the like in the current_users's likes by the post, which rails knows to check for the post_id %>
+<% like = current_user.likes.find_by(post: @post) %>
+<% if like.nil? %>
+  <%# like is found %>
+  <form action="/likes" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <input type="hidden" name="like[post_id]" value="<%= @post.id %>">
+    <input type="submit" value="Like">
+  </form>
+<% else %>
+  <%# go to the path to destroy the like FOR that like corresponding to the post %>
+  <form action="<%= like_path(like) %>" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <%# in rails, send delete request, we need to use a hidden input %>
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" value="Dislike">
+  </form>
+<% end %>
 <p>
   <strong>Comments</strong>
-
+</p>
   <%# can pass in an object or list and rails knows where to find the view that corresponds to what was passed in and also passes in the object/s %>
 
-  <%# this represents the N+1 problem, 
-    1. where this command is first going to get all the records where the comments FK matches the Post's PK 
-    2. Then, when we render the comments, we're showing comment.content, but we also want to show the username/email next to it. So then we do comment.user.
-    3. Because we don't have the users info, we need run another query to find the user that corresponds to the comment. and we do this for N comments.
-    4. This introduces the N + 1 problem when the N expensive operations are a result of that 1 operation.
-    5. To fix this, we gonna preload the data before view is rendered, so we dont fire that much extra queries.
-    %>
-  <%# <%= render @post.comments %> %>
-  <%# 
-    This is known as eager loading 
-    Rails is smart here and when we call the top-level request to get all comments, it's probably going to store the userPK somewhere when it sees that the comment belongs to the post. Then, after its done getting all the comments for the post, it will load the associations in memory to save you from all the queries you'd otherwise have to make if you were to fetch everytime you rendered a comment.
-
-    What it does under the hood is when you're getting all the comments for the post, as its doing that, its going to save a list of the user_id(PK) for each comment. Then after thats done, its going to run a where IN statement using that list and save all the users in memory.
+<%# this represents the N+1 problem, 
+  1. where this command is first going to get all the records where the comments FK matches the Post's PK 
+  2. Then, when we render the comments, we're showing comment.content, but we also want to show the username/email next to it. So then we do comment.user.
+  3. Because we don't have the users info, we need run another query to find the user that corresponds to the comment. and we do this for N comments.
+  4. This introduces the N + 1 problem when the N expensive operations are a result of that 1 operation.
+  5. To fix this, we gonna preload the data before view is rendered, so we dont fire that much extra queries.
   %>
+<%# <%= render @post.comments %> %>
+<%# 
+  This is known as eager loading 
+  Rails is smart here and when we call the top-level request to get all comments, it's probably going to store the userPK somewhere when it sees that the comment belongs to the post. Then, after its done getting all the comments for the post, it will load the associations in memory to save you from all the queries you'd otherwise have to make if you were to fetch everytime you rendered a comment.
 
-  <%# render top level comments %>
-  <%= render @post.comments.where(parent_id: nil).order(id: :desc).includes(:user) %>
+  What it does under the hood is when you're getting all the comments for the post, as its doing that, its going to save a list of the user_id(PK) for each comment. Then after thats done, its going to run a where IN statement using that list and save all the users in memory.
+%>
+
+<%# render top level comments %>
+<%= render @post.comments.where(parent_id: nil).order(id: :desc).includes(:user) %>
 
 
-  <%# need to explicitely say where the partial is because we're not passing in an object AND the form isn't inside the posts view. it's inside the comments view. %>
-  <%# this means we also need to pass in a local variable %>
-  <%= render partial: 'comments/form' , locals: { post: @post, parent: nil } %>
-</p>
+<%# need to explicitely say where the partial is because we're not passing in an object AND the form isn't inside the posts view. it's inside the comments view. %>
+<%# this means we also need to pass in a local variable %>
+<%= render partial: 'comments/form' , locals: { post: @post, parent: nil } %>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |
 <%= link_to 'Back', posts_path %>

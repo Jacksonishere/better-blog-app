@@ -10,6 +10,7 @@ class User < ApplicationRecord
     #For example, it knows to go to the Posts table and get the posts whose FK matches the declaring Users PK.
     has_many :posts
     has_many :comments
+    has_many :likes
 
     #simply return the raw password instance, which you set when initially creating the User that used it @password to create the hashed password. 
     def password

@@ -4,9 +4,9 @@
     <small> by <%= comment.user.email %></small>
 
     <%# Use link to toggle form %>
-    <%# When rendering the form, you want to pass in the current comment as the parent so when it renders the form and you actually submit a new comment, it will use the comment id as the parent_id to create the association for the newly nested comment %>
     <a href='#' class="comment-form-display">reply</a>
-    <div class="comment-form hidden">
+    <%# When rendering the form, you want to pass in the current comment as the parent so when it renders the form and you actually submit a new comment, it will use the comment id as the parent_id to create the association for the newly nested comment %>
+    <div class="comment-form">
         <%= render partial: 'comments/form', locals: {post: comment.post, parent: comment } %>
     </div>
 
