@@ -1,0 +1,20 @@
+<%= likeable.likes.count %> Likes
+<%# look for the like in the current_users's likes by the post, which rails knows to check for the post_id %>
+<% like = current_user.likes.find_by(likeable: likeable) %>
+<% if like.nil? %>
+  <%# like is found %>
+  <form action="/likes" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <input type="hidden" name="like[likeable_id]" value="<%= likeable.id %>">
+    <input type="hidden" name="like[likeable_type]" value="<%= likeable.class.to_s %>">
+    <input type="submit" value="Like">
+  </form>
+<% else %>
+  <%# go to the path to destroy the like FOR that like corresponding to the post %>
+  <form action="<%= like_path(like) %>" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <%# in rails, send delete request, we need to use a hidden input %>
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" value="Dislike">
+  </form>
+<% end %>

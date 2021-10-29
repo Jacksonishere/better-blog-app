@@ -3,6 +3,9 @@
      <p><%= comment.content %> </p>
     <small> by <%= comment.user.email %></small>
 
+    <%= render partial: 'shared/like', locals: { likeable: comment }  %>
+
+
     <%# Use link to toggle form %>
     <a href='#' class="comment-form-display">reply</a>
     <%# When rendering the form, you want to pass in the current comment as the parent so when it renders the form and you actually submit a new comment, it will use the comment id as the parent_id to create the association for the newly nested comment %>
@@ -15,7 +18,7 @@
 
     <%# recursively render the subcomments %>
     <div class="sub-comment">
-        <%= render comment.comments %>
+        <%= render comment.comments.order(id: :desc) %>
     </div>
 </article>
 
